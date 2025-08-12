@@ -94,7 +94,26 @@
       <button type="button">重置輸入</button>
     </div>
   </form>
-  <div id="result" style="margin-top: 20px;"></div>
+  <div id="result" style="margin-top: 20px;">
+    <h1>貸款金額：1000000 總利息支出：458650 總金額:1458659</h1>
+  </div>
+
+  <table id='resultTable'>
+    <thead>
+      <tr>
+        <th>期別</th>
+        <th>攤還本金</th>
+        <th>攤還利息</th>
+        <th>月付金</th>
+        <th>貸款餘額</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+
+  </table>
+
 
 
   <script>
@@ -102,8 +121,10 @@
     const rateE1 = document.querySelector("#rate");
     const timeE1 = document.querySelector("#time");
     const calcE1 = document.querySelector("#calc");
+    const resultE1 = document.querySelector("#result");
+    const resultTableE1 = document.querySelector("#resultTable tbody");
 
-    console.log(principalE1, rateE1, timeE1, calcE1);
+    console.log(principalE1, rateE1, timeE1, calcE1, resultTableE1);
 
     function reset() {
       principalE1.innerHTML = "";
@@ -124,22 +145,32 @@
 
       //1.計算每個月應還本金
       let month_pay = Math.round(principal / months);
+      let tempHtml = "";
 
+      let totalInterest = 0;
       for (let i = 0; i < months; i++) {
         //計算每個月利息
-        let interest = principal * month_rate;
+        let interest = Math.round(principal * month_rate);
+        totalInterest += interest
         //本金減去每個月應還本金
         principal -= month_pay;
         //每月應還（本金＋利息）,剩餘貸款
+
+        let tempHtml = "<tr>";
         if (i == months - 1) {
-          console.log(i + 1, month_pay, interest, month_pay + interest + principal, principal, 0);
+          tempHtml += `<td>${i + 1}</td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest + principal}</td><td>${0}</td>`
+
         } else {
-          console.log(i + 1, month_pay, interest, month_pay + interest, principal);
+          tempHtml += `<td>${i + 1}</td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest}</td><td>${principal}</td>`
         }
+
+        tempHtml += "</tr>";
       }
+      document.querySelector("#resultTable").hidden = false;
+
+      resultTableEl.innerHTML = tempHtml;
 
     });
-
 
 
   </script>
