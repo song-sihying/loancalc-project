@@ -94,11 +94,11 @@
       <button type="button">重置輸入</button>
     </div>
   </form>
-  <div id="result" style="margin-top: 20px;">
-    <h1>貸款金額：1000000 總利息支出：458650 總金額:1458659</h1>
+  <div id="result" style="margin-top: 20px;" hidden>
+
   </div>
 
-  <table id='resultTable'>
+  <table id="resultTable" hidden>
     <thead>
       <tr>
         <th>期別</th>
@@ -110,40 +110,46 @@
     </thead>
     <tbody>
 
-    </tbody>
 
+    </tbody>
   </table>
 
 
 
-  <script>
-    const principalE1 = document.querySelector("#principal");
-    const rateE1 = document.querySelector("#rate");
-    const timeE1 = document.querySelector("#time");
-    const calcE1 = document.querySelector("#calc");
-    const resultE1 = document.querySelector("#result");
-    const resultTableE1 = document.querySelector("#resultTable tbody");
 
-    console.log(principalE1, rateE1, timeE1, calcE1, resultTableE1);
+  <script>
+    const principalEl = document.querySelector("#principal");
+    const rateEl = document.querySelector("#rate");
+    const timeEl = document.querySelector("#time");
+    const calcEl = document.querySelector("#calc");
+    const resultEl = document.querySelector("#result");
+    const resultTableEl = document.querySelector("#resultTable tbody");
+
+
+
+    console.log(principalEl, rateEl, timeEl, resultTableEl);
 
     function reset() {
-      principalE1.innerHTML = "";
-      rateE1.innerHTML = "";
-      calcE1.innerHTML = "";
+      principalEl.innerHTML = "";
+      rateEl.innerHTML = "";
+      timeEl.innerHTML = "";
+      document.querySelector("#resultTable").hidden = true;
+      resultEl.hidden = true;
     }
 
-    calcE1.addEventListener("click", () => {
+    calcEl.addEventListener("click", () => {
 
-      let principal = principalE1.value;
-      let rate = rateE1.value;
-      let time = timeE1.value;
+      let principal = principalEl.value;
+      let rate = rateEl.value;
+      let time = timeEl.value;
 
-      //總還款月數
+      // 總還款月數
       let months = time * 12;
-      //月利率
+      // 月利率
       let month_rate = rate / 12 / 100;
 
-      //1.計算每個月應還本金
+
+      // 1.計算每個月應還本金
       let month_pay = Math.round(principal / months);
       let tempHtml = "";
 
@@ -151,30 +157,35 @@
       for (let i = 0; i < months; i++) {
         //計算每個月利息
         let interest = Math.round(principal * month_rate);
-        totalInterest += interest
+        totalInterest += interest;
         //本金減去每個月應還本金
         principal -= month_pay;
-        //每月應還（本金＋利息）,剩餘貸款
+        //每月應還(本金+利息),剩餘貸款
 
-        let tempHtml = "<tr>";
+        tempHtml += "<tr>";
         if (i == months - 1) {
-          tempHtml += `<td>${i + 1}</td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest + principal}</td><td>${0}</td>`
+          tempHtml += `<td>${i + 1}</td><td>${month_pay}</td><td>${interest}</td>
+          <td>${month_pay + interest + principal}</td><td>${0}</td>`;
 
         } else {
-          tempHtml += `<td>${i + 1}</td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest}</td><td>${principal}</td>`
+          tempHtml += `<td>${i + 1}</td><td>${month_pay}</td><td>${interest}</td>
+          <td>${month_pay + interest}</td><td>${principal}</td>`;
         }
 
         tempHtml += "</tr>";
       }
+
       document.querySelector("#resultTable").hidden = false;
+      resultEl.hidden = false;
 
       resultTableEl.innerHTML = tempHtml;
+      resultEl.innerHTML = `<h3>貸款金額:${principalEl.value} 總利息:${totalInterest} 總支出:${Number(principalEl.value) + totalInterest}</h3>`;
+
 
     });
 
 
   </script>
-
 
 
 </body>
